@@ -153,12 +153,12 @@ namespace Analizador_Lexico_Compiladores
                     _position++; // Saltar la primera comilla
                     string str = "";
                     // Recolectar el contenido del string hasta encontrar la comilla de cierre
-                    while (_position < _input.Length && _input[_position] != '"')
+                    while (_position < _input.Length && current != '"')
                     {
                         str += current;
                     }
                     // Verificar si se llegó al final del string sin cerrar
-                    if (_position == _input.Length - 1 && nextChar != '"')
+                    if (_position == _input.Length - 1 && _input[_position++] != '"')
                     {
                         Console.WriteLine("Se espera cerrar string con doble comilla.");
                     }

@@ -37,10 +37,8 @@ namespace Analizador_Lexico_Compiladores
 
                     Console.WriteLine("Tokenizacion completa");
 
-                    string[] grammarLines = File.ReadAllLines(grammarFilePath);
                     //call escaner (verificar no terminales en tokens)
-                    Scanner scanner = new Scanner(grammarLines);
-
+                    Scanner scanner = new Scanner(lines);
                     //call escaner (verficar no terminal en der, tenga prod en izq)
                     scanner.StartScan();
                     
