@@ -76,8 +76,8 @@ namespace Analizador_Lexico_Compiladores
                     while (_position < _input.Length && Char.IsDigit(_input[_position]))
                     {
                         number += current;
-                    }
-                    _position++;
+                        _position++;
+                    }                    
                     _tokens.Add(new Token(TokenType.Number, number));
                 }
                 // Procesar identificadores y keywords
@@ -88,8 +88,8 @@ namespace Analizador_Lexico_Compiladores
                     while (_position < _input.Length && (Char.IsLetterOrDigit(_input[_position]) || _input[_position] == '_'))
                     {
                         identifier += current;
-                    }
-                    _position++;
+                        _position++;
+                    }                    
                     // Verificar si es una keyword
                     if (_keywords.ContainsKey(identifier))
                     {
@@ -147,20 +147,20 @@ namespace Analizador_Lexico_Compiladores
                     _tokens.Add(new Token(TokenType.RightBrace, "}"));
                     _position++;
                 }
-                // Procesar strings entre comillas dobles
-                else if (current == '"')
+                // Procesar strings entre comillas simples
+                else if (Convert.ToString(current) == "'")
                 {
                     _position++; // Saltar la primera comilla
                     string str = "";
                     // Recolectar el contenido del string hasta encontrar la comilla de cierre
-                    while (_position < _input.Length && current != '"')
+                    while (_position < _input.Length && Convert.ToString(current) != "'")
                     {
                         str += current;
                     }
                     // Verificar si se llegó al final del string sin cerrar
-                    if (_position == _input.Length - 1 && _input[_position++] != '"')
+                    if (_position == _input.Length - 1 && Convert.ToString(_input[_position++]) != "'")
                     {
-                        Console.WriteLine("Se espera cerrar string con doble comilla.");
+                        Console.WriteLine("Se espera cerrar string con comilla.");
                     }
                     _position++; // Saltar la comilla de cierre
                     _tokens.Add(new Token(TokenType.String, str));
@@ -205,6 +205,21 @@ namespace Analizador_Lexico_Compiladores
                     _tokens.Add(new Token(TokenType.Operator, "*"));
                     _position++;
                 }
+                else if (current == '|')
+                {
+                    _tokens.Add(new Token(TokenType.Operator, "|"));
+                    _position++;
+                }
+                else if (current == '&')
+                {
+                    _tokens.Add(new Token(TokenType.Nullable, "&"));
+                    _position++;
+                }
+                else if (".,:".Contains(current))
+                {
+                    _tokens.Add(new Token(TokenType.Punctuation, current.ToString()));
+                    _position++;
+                }
                 // Manejo de símbolos no reconocidos
                 else
                 {
@@ -223,7 +238,7 @@ namespace Analizador_Lexico_Compiladores
     // Definición de los tipos de tokens
     public enum TokenType
     {
-        Number, String, Identifier, Keyword, Operator, Delimiter, LeftParen, RightParen, LeftBrace, RightBrace, EOF
+        Number, String, Identifier, Keyword, Operator, Delimiter, LeftParen, RightParen, LeftBrace, RightBrace, EOF, Punctuation , Nullable
     }
 
     // Clase para representar un token
