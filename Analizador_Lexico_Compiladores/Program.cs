@@ -34,10 +34,11 @@ namespace Analizador_Lexico_Compiladores
                     string fullText = string.Join("\n", lines);
                     Lexer lexer = new Lexer(fullText);
                     //call lexer. tokenize
+
                     Console.WriteLine("Tokenizacion completa");
 
-
-                    //call escaner (verificar terminales en tokens)
+                    string[] grammarLines = File.ReadAllLines(grammarFilePath);
+                    //call escaner (verificar no terminales en tokens)
                     Scanner scanner = new Scanner(grammarLines);
 
                     //call escaner (verficar no terminal en der, tenga prod en izq)
