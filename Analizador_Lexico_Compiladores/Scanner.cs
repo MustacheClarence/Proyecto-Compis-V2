@@ -12,16 +12,25 @@ namespace Analizador_Lexico_Compiladores
         private List<string> _productions;
         private List<string> _nonTerminalsRight;
         private List<string> _nonTerminalsLeft;
+        private string _mainProduction;  // Producción principal que se debe ignorar
 
 
-        public Scanner(string[] lines)
+        public Scanner(string[] lines, string mainProduction = "<program>")
         {
             _productions = new List<string>();
             _nonTerminalsRight = new List<string>();
             _nonTerminalsLeft = new List<string>();
+            _mainProduction = mainProduction; // Definimos la producción principal
 
             // Filtrar el array para que solo tenga las producciones
             FilterProductions(lines);
+        }
+
+        public void StartScan() 
+        { 
+            CollectRightSideNonTerminals();
+            CollectLeftSideNonTerminals();
+            CompareNonTerminals();
         }
 
 
@@ -64,13 +73,13 @@ namespace Analizador_Lexico_Compiladores
                         if (!_nonTerminalsRight.Contains(match.Value))
                         {
                             _nonTerminalsRight.Add(match.Value);
-                        }                        
+                        }
                     }
                 }
             }
         }
-
-        public void RemoveLeftSideNonTerminals()
+        // Método para leer las producciones y obtener los no terminales a la izquierda del "="
+        public void CollectLeftSideNonTerminals()
         {
             string nonTerminal = @"<\w+>";
 
@@ -80,38 +89,66 @@ namespace Analizador_Lexico_Compiladores
                 Match match = Regex.Match(production, nonTerminal);
                 if (match.Success)
                 {
-                    // Almacenar el no terminal encontrado en la izquierda
-                    _nonTerminalsLeft.Add(match.Value);
-
-                    // Eliminar de la lista de no terminales de la derecha si lo encontramos en la izquierda
-                    _nonTerminalsRight.RemoveAll(nt => nt == match.Value);
-                }
-            }
-
-            foreach (var production in _productions)
-            {
-                // Dividir en lado izquierdo y derecho
-                var parts = production.Split('=');
-                if (parts.Length == 2)
-                {
-                    string leftSide = parts[0].Trim();
-
-                    // Encontrar todos los no terminales en el lado derecho
-                    MatchCollection matches = Regex.Matches(leftSide, nonTerminal);
-                    foreach (Match match in matches)
+                    // Agregar solo si no está ya en la lista (evitar duplicados)
+                    if (!_nonTerminalsLeft.Contains(match.Value))
                     {
-                        
+                        _nonTerminalsLeft.Add(match.Value);
                     }
                 }
             }
         }
 
-        // Obtener los no terminales que no tienen producción
-        public List<string> GetNonTerminalsWithoutProductions()
+        public void CompareNonTerminals()
         {
-            return _nonTerminalsRight;
-        }
-    }
+            List<string> missingProductions = new List<string>();
+            List<string> undefinedNonTerminals = new List<string>();
 
-   
+            // Verificar no terminales en el lado derecho que no tengan producción en el lado izquierdo
+            foreach (string nonTerminal in _nonTerminalsRight)
+            {
+                // Si no está en el lado izquierdo y no es la producción principal
+                if (!_nonTerminalsLeft.Contains(nonTerminal) && nonTerminal != _mainProduction)
+                {
+                    missingProductions.Add(nonTerminal);
+                }
+            }
+
+            // Verificar no terminales en el lado izquierdo que no estén en el lado derecho
+            foreach (string nonTerminal in _nonTerminalsLeft)
+            {
+                if (!_nonTerminalsRight.Contains(nonTerminal) && nonTerminal != _mainProduction)
+                {
+                    undefinedNonTerminals.Add(nonTerminal);
+                }
+            }
+
+            // Mostrar resultados de las comparaciones
+            if (missingProductions.Count > 0)
+            {
+                Console.WriteLine("No terminales sin producción:");
+                foreach (string nt in missingProductions)
+                {
+                    Console.WriteLine(nt);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Todos los no terminales tienen producción.");
+            }
+
+            if (undefinedNonTerminals.Count > 0)
+            {
+                Console.WriteLine("No terminales con producción pero no usados:");
+                foreach (string nt in undefinedNonTerminals)
+                {
+                    Console.WriteLine(nt);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Todos los no terminales utilizados tienen producción.");
+            }
+        }
+
+    }
 }

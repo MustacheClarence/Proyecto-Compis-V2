@@ -25,7 +25,7 @@ namespace Analizador_Lexico_Compiladores
 
             // Definir los patrones para cada sección de la gramática
             string pattern_compiler = @"^\s*COMPILER\s+\w+\s*\.\s*$";
-            string patter_units = @"^\s*UNITS\s+((Uinclude|Ugenera|ValConst|ValExp|RegArray|Proc|ValCond)\s*,\s*)*(Uinclude|Ugenera|ValConst|ValExp|RegArray|Proc|ValCond)\s*;\s*$";
+            string pattern_units = @"^\s*UNITS\s+((Uinclude|Ugenera|ValConst|ValExp|RegArray|Proc|ValCond)\s*,\s*)*(Uinclude|Ugenera|ValConst|ValExp|RegArray|Proc|ValCond)\s*;\s*$";
             string pattern_sets = @"^\s*SETS\s+letter\s*=\s*'A'\.\.'Z'\s*\+\s*'a'\.\.'z'\s*\+\s*'_'\s*;\s*digit\s*=\s*'0'\.\.'9'\s*;\s*charset\s*=\s*chr\(32\)\.\.chr\(254\)\s*;\s*$";
             string pattern_tokens = @"^\s*TOKENS\s+"
                                   + @"(number\s*=\s*digit\s+digit\*;\s*)?"
@@ -47,7 +47,7 @@ namespace Analizador_Lexico_Compiladores
                 ErrorMessages.Add("Error: Se esperaba la sección 'COMPILER <nombre_compilador>.'");
             }
             // Valida "UNITS" y que tenga por lo menos una unidad valida
-            if (!Regex.IsMatch(fullText, pattern_compiler, RegexOptions.Multiline))
+            if (!Regex.IsMatch(fullText, pattern_units, RegexOptions.Multiline))
             {
                 isValid = false;
                 ErrorMessages.Add("Error: Se esperaba la sección 'UNITS' seguido por lo menos una unidad valida.");
