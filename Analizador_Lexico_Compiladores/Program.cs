@@ -29,7 +29,10 @@ namespace Analizador_Lexico_Compiladores
                 if (validator.PrevalidateGrammar(lines))
                 {
                     Console.WriteLine("Prevalidación completada sin errores.");
-                    //decalrar lexer
+                    //declarar lexer
+                    Lexer lexer = new Lexer();
+
+
                     //call lexer. tokenize
                     //call escaner (verificar terminales en tokens)
                     //call escaner (verficar no terminal en der, tenga prod en izq)
