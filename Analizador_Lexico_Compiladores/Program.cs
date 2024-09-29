@@ -29,13 +29,39 @@ namespace Analizador_Lexico_Compiladores
                 if (validator.PrevalidateGrammar(lines))
                 {
                     Console.WriteLine("Prevalidación completada sin errores.");
+                    // Obtener las producciones de la gramática
+                    Dictionary<string, List<string>> productions = validator.Productions;
+
                     //declarar lexer
                     Lexer lexer = new Lexer();
-
-
                     //call lexer. tokenize
+                    lexer.Tokenize(lines);
+                    Console.Writeline("Tokenizacion completa");
+
+
                     //call escaner (verificar terminales en tokens)
                     //call escaner (verficar no terminal en der, tenga prod en izq)
+
+                    // Verificar terminales en los tokens
+                    if (lexer.ValidateTerminals())
+                    {
+                        Console.WriteLine("Todos los tokens son terminales válidos.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Errores encontrados en la validación de terminales.");
+                        return;
+                    }
+                    // Validar no terminales (verificar que tengan producción en el lado izquierdo)
+                    if (lexer.ValidateProductions(productions))
+                    {
+                        Console.WriteLine("No terminales verificados exitosamente.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Errores encontrados en la validación de no terminales.");
+                        return;
+                    }
                 }
                 else
                 {
