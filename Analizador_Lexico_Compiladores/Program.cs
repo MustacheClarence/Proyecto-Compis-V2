@@ -38,28 +38,13 @@ namespace Analizador_Lexico_Compiladores
 
 
                     //call escaner (verificar terminales en tokens)
-                    //call escaner (verficar no terminal en der, tenga prod en izq)
+                    Scanner scanner = new Scanner(grammarLines);
 
-                    // Verificar terminales en los tokens
-                    if (lexer.ValidateTerminals())
-                    {
-                        Console.WriteLine("Todos los tokens son terminales válidos.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Errores encontrados en la validación de terminales.");
-                        return;
-                    }
-                    // Validar no terminales (verificar que tengan producción en el lado izquierdo)
-                    if (lexer.ValidateProductions(productions))
-                    {
-                        Console.WriteLine("No terminales verificados exitosamente.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Errores encontrados en la validación de no terminales.");
-                        return;
-                    }
+                    //call escaner (verficar no terminal en der, tenga prod en izq)
+                    scanner.StartScan();
+                    
+
+
                 }
                 else
                 {
