@@ -29,14 +29,12 @@ namespace Analizador_Lexico_Compiladores
                 if (validator.PrevalidateGrammar(lines))
                 {
                     Console.WriteLine("Prevalidación completada sin errores.");
-                    // Obtener las producciones de la gramática
-                    Dictionary<string, List<string>> productions = validator.Productions;
-
+                    
                     //declarar lexer
-                    Lexer lexer = new Lexer();
+                    string fullText = string.Join("\n", lines);
+                    Lexer lexer = new Lexer(fullText);
                     //call lexer. tokenize
-                    lexer.Tokenize(lines);
-                    Console.Writeline("Tokenizacion completa");
+                    Console.WriteLine("Tokenizacion completa");
 
 
                     //call escaner (verificar terminales en tokens)
