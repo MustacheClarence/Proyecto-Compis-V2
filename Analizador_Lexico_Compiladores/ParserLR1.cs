@@ -246,5 +246,99 @@ namespace Analizador_Lexico_Compiladores
         }
 
         private bool IsTerminal(string symbol) => !symbol.StartsWith("<") && !symbol.EndsWith(">");
+
+
+        public void Parse(List<string> tokens, SymbolTable symbolTable)
+        {
+            Stack<int> stateStack = new Stack<int>(); // Pila de estados
+            Stack<string> symbolStack = new Stack<string>(); // Pila de símbolos
+            stateStack.Push(0); // Estado inicial
+
+            int currentIndex = 0;
+            while (currentIndex < tokens.Count)
+            {
+                int currentState = stateStack.Peek();
+                string currentToken = tokens[currentIndex];
+
+                // Obtener la acción de la tabla de parsing
+                if (parsingTable.TryGetValue((currentState, currentToken), out string action))
+                {
+                    Console.WriteLine($"Estado: {currentState}, Token: {currentToken}, Acción: {action}");
+
+                    if (action.StartsWith("Shift"))
+                    {
+                        // Shift: Avanzar al siguiente token
+                        int nextState = int.Parse(action.Split(' ')[1]);
+                        stateStack.Push(nextState);
+                        symbolStack.Push(currentToken);
+
+                        // Si es un identificador, agregarlo a la tabla de símbolos
+                        if (currentToken == "identifier" && currentIndex + 1 < tokens.Count)
+                        {
+                            string identifierName = tokens[currentIndex + 1]; // El nombre real del identificador
+                            symbolTable.AddSymbol(identifierName, "unknown"); // Tipo desconocido por ahora
+                        }
+
+                        currentIndex++;
+                    }
+                    else if (action.StartsWith("Reduce"))
+                    {
+                        // Reduce: Aplicar una regla de la gramática
+                        int ruleIndex = int.Parse(action.Split(' ')[1]);
+                        string production = productions[ruleIndex];
+
+                        var parts = production.Split('=');
+                        string nonTerminal = parts[0].Trim();
+                        string[] rhs = parts[1].Trim().Split(' ');
+
+                        // Sacar los símbolos correspondientes de la pila
+                        for (int i = 0; i < rhs.Length; i++)
+                        {
+                            symbolStack.Pop();
+                            stateStack.Pop();
+                        }
+
+                        // Poner el no terminal en la pila de símbolos
+                        symbolStack.Push(nonTerminal);
+
+                        // GoTo: Cambiar al nuevo estado
+                        int gotoState = int.Parse(parsingTable[(stateStack.Peek(), nonTerminal)].Split(' ')[1]);
+                        stateStack.Push(gotoState);
+                    }
+                    else if (action == "Accept")
+                    {
+                        Console.WriteLine("Cadena aceptada.");
+                        return;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Error: No se encontró una acción para el estado {currentState} con el token {currentToken}.");
+                    return;
+                }
+            }
+
+            Console.WriteLine("Error: Cadena incompleta.");
+        }
+
+
+        public class SymbolTable
+        {
+            private Dictionary<string, string> symbols = new Dictionary<string, string>();
+
+            public void AddSymbol(string identifier, string type)
+            {
+                if (!symbols.ContainsKey(identifier))
+                {
+                    symbols[identifier] = type;
+                    Console.WriteLine($"Símbolo agregado: {identifier} - {type}");
+                }
+            }
+
+            public bool ContainsSymbol(string identifier)
+            {
+                return symbols.ContainsKey(identifier);
+            }
+        }
     }
 }

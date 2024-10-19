@@ -5,6 +5,17 @@ pasar lista de tokens de lexer a parser
 parsear cadena imprimiendo las acciones que se vayan haciendo
 
 
+/////////////////////////////////////////en main debería ir algo asi////////////////////////////////
+
+ParserLR1 parser = new ParserLR1(producciones de la gramatica);
+SymbolTable symbolTable = new SymbolTable(); // Crear la tabla de símbolos
+
+List<string> tokens = new List<string> ; // esta debería ser la lista de tokens de las pruebas
+parser.Parse(tokens, symbolTable); // Pasar la tabla de símbolos al parser
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 codigo por hacer en clase parser
 	generar estados
 	generar tabla de parseo
