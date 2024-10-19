@@ -95,10 +95,25 @@ namespace Analizador_Lexico_Compiladores
                     {
                         _tokens.Add(new Token(_keywords[identifier], identifier));
                     }
-                    // Verificar si es un operador (OR, AND, MOD, DIV, NOT)
-                    else if (identifier == "OR" || identifier == "AND" || identifier == "MOD" || identifier == "DIV" || identifier == "NOT")
+                    // Verificar si es un operador (MOD, DIV, NOT)
+                    else if (identifier == "MOD" || identifier == "DIV" || identifier == "NOT") //   borrar o editar esto
                     {
-                        _tokens.Add(new Token(TokenType.Operator, identifier));
+                        _tokens.Add(new Token(TokenType.multiplicative_operator, identifier));
+                    }
+                    // Verificar si es un operador OR
+                    else if (identifier == "OR")
+                    {
+                        _tokens.Add(new Token(TokenType.additive_operator, identifier));
+                    }
+                    // Verificar si es un operador AND
+                    else if (identifier == "AND")
+                    {
+                        _tokens.Add(new Token(TokenType.multiplicative_operator, identifier));
+                    }
+                    // Verificar si es una constante booleana
+                    else if (identifier == "TRUE" || identifier == "FALSE")
+                    {
+                        _tokens.Add(new Token(TokenType.boolean_constant, identifier));
                     }
                     // Si no es keyword ni operador, es un identificador
                     else
@@ -171,48 +186,53 @@ namespace Analizador_Lexico_Compiladores
                     if (current == '<' && nextChar == ">")
                     {
                         _position += 2;
-                        _tokens.Add(new Token(TokenType.Operator, "<>"));
+                        _tokens.Add(new Token(TokenType.relational_operator, "<>"));
                     }
                     else if (current == '>' && nextChar == "=")
                     {
                         _position += 2;
-                        _tokens.Add(new Token(TokenType.Operator, ">="));
+                        _tokens.Add(new Token(TokenType.relational_operator, ">="));
                     }
                     else if (current == '<' && nextChar == "=")
                     {
                         _position += 2;
-                        _tokens.Add(new Token(TokenType.Operator, "<="));
+                        _tokens.Add(new Token(TokenType.relational_operator, "<="));
                     }
                     else
                     {
-                        _tokens.Add(new Token(TokenType.Operator, current.ToString()));
+                        _tokens.Add(new Token(TokenType.relational_operator, current.ToString()));
                         _position++;
                     }
                 }
                 // Procesar operadores aritméticos simples (+, -, *)
                 else if (current == '+')
                 {
-                    _tokens.Add(new Token(TokenType.Operator, "+"));
+                    _tokens.Add(new Token(TokenType.additive_operator, "+"));
                     _position++;
                 }
                 else if (current == '-')
                 {
-                    _tokens.Add(new Token(TokenType.Operator, "-"));
+                    _tokens.Add(new Token(TokenType.additive_operator, "-"));
                     _position++;
                 }
                 else if (current == '*')
                 {
-                    _tokens.Add(new Token(TokenType.Operator, "*"));
+                    _tokens.Add(new Token(TokenType.multiplicative_operator, "*"));
+                    _position++;
+                }
+                else if (current == '/')
+                {
+                    _tokens.Add(new Token(TokenType.multiplicative_operator, "/"));
                     _position++;
                 }
                 else if (current == '|')
                 {
-                    _tokens.Add(new Token(TokenType.Operator, "|"));
+                    _tokens.Add(new Token(TokenType.additive_operator, "OR"));
                     _position++;
                 }
-                else if (current == '&')
+                else if (current == '&' || current == 'ε')
                 {
-                    _tokens.Add(new Token(TokenType.Nullable, "&"));
+                    _tokens.Add(new Token(TokenType.Nullable, "ε"));
                     _position++;
                 }
                 else if (".,:".Contains(current))
@@ -238,7 +258,8 @@ namespace Analizador_Lexico_Compiladores
     // Definición de los tipos de tokens
     public enum TokenType
     {
-        Number, String, Identifier, Keyword, Operator, Delimiter, LeftParen, RightParen, LeftBrace, RightBrace, EOF, Punctuation , Nullable
+        Number, String, Identifier, Keyword, Delimiter, LeftParen, RightParen, LeftBrace, RightBrace, EOF, Punctuation,
+        Nullable, relational_operator, additive_operator, multiplicative_operator, boolean_constant
     }
 
     // Clase para representar un token
