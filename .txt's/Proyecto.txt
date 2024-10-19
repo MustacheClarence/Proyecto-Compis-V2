@@ -1,0 +1,38 @@
+Luego de leer la gramatica y verificar que este bien
+borrar pantalla y pedir ruta de archivo con programa (las pruebas)
+tokenizer archivo
+pasar lista de tokens de lexer a parser
+parsear cadena imprimiendo las acciones que se vayan haciendo
+
+
+codigo por hacer en clase parser
+	generar estados
+	generar tabla de parseo
+
+
+código de parser
+	GenerateStates():
+		Genera todos los estados utilizando los métodos closure y goto.
+		Los estados se añaden a la lista si no existen previamente.\
+
+	Closure():
+		Expande los ítems al agregar producciones relevantes para cada no terminal encontrado.
+
+	Goto():
+		Genera un nuevo estado moviendo el punto al siguiente símbolo.
+
+	Construcción de la tabla (BuildParsingTable):
+		Recorre cada estado generado previamente.
+		Analiza cada producción dentro del estado, utilizando la posición del punto (●).
+		Si el punto no está al final: Shift o GoTo.
+		Si el punto está al final: Reduce.
+		Si es la producción inicial completa: Accept.
+
+	GetNextState:
+		Calcula el siguiente estado utilizando la función Goto y busca el índice del estado correspondiente.
+	
+	IsTerminal:
+		Verifica si un símbolo es terminal (no tiene < > alrededor).
+
+	StateExists:
+		Verifica si un estado ya existe para evitar duplicados.

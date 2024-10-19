@@ -96,7 +96,7 @@ namespace Analizador_Lexico_Compiladores
                         _tokens.Add(new Token(_keywords[identifier], identifier));
                     }
                     // Verificar si es un operador (MOD, DIV, NOT)
-                    else if (identifier == "MOD" || identifier == "DIV" || identifier == "NOT") //   borrar o editar esto
+                    else if (identifier == "MOD" || identifier == "DIV" || identifier == "NOT")
                     {
                         _tokens.Add(new Token(TokenType.multiplicative_operator, identifier));
                     }
