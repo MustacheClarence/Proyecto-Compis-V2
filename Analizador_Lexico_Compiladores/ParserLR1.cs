@@ -248,7 +248,7 @@ namespace Analizador_Lexico_Compiladores
         private bool IsTerminal(string symbol) => !symbol.StartsWith("<") && !symbol.EndsWith(">");
 
 
-        public void Parse(List<string> tokens, SymbolTable symbolTable)
+        public bool Parse(List<string> tokens, SymbolTable symbolTable)
         {
             Stack<int> stateStack = new Stack<int>(); // Pila de estados
             Stack<string> symbolStack = new Stack<string>(); // Pila de símbolos
@@ -308,17 +308,19 @@ namespace Analizador_Lexico_Compiladores
                     else if (action == "Accept")
                     {
                         Console.WriteLine("Cadena aceptada.");
-                        return;
+                        return true;
                     }
+
                 }
                 else
                 {
                     Console.WriteLine($"Error: No se encontró una acción para el estado {currentState} con el token {currentToken}.");
-                    return;
+                    return false;
                 }
             }
 
             Console.WriteLine("Error: Cadena incompleta.");
+            return false;
         }
 
 
