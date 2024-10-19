@@ -41,7 +41,44 @@ namespace Analizador_Lexico_Compiladores
                     Scanner scanner = new Scanner(lines);
                     //call escaner (verficar no terminal en der, tenga prod en izq)
                     scanner.StartScan();
-                    
+
+                    List<string> grammarProductions = lines.ToList();
+                    ParserLR1 parser = new ParserLR1(grammarProductions);
+                    Console.WriteLine("Parser LR1 generado correctamente.");
+
+                    Console.WriteLine("Por favor, introduce la ruta completa del archivo que contiene el input a analizar:");
+                    string inputFilePath = Console.ReadLine();
+
+                     if (!File.Exists(inputFilePath))
+                    {
+                        Console.WriteLine("El archivo de input no existe. Por favor, verifica la ruta e intenta nuevamente.");
+                        Main(args);
+                    }
+
+                      // Leer el input del archivo
+                    string input = File.ReadAllText(inputFilePath);
+                    Console.WriteLine("Archivo de input leído correctamente.");
+
+                    // Generar los tokens a partir del input utilizando el lexer
+                    Lexer lexer = new Lexer(input);
+                    List<Token> tokens = lexer.GetTokens();
+                     Console.WriteLine("Tokens generados:");
+                    foreach (var token in tokens)
+                    {
+                        Console.WriteLine($"{token.Type}: {token.Value}");
+                    }
+                    // Llamar al parser LR1 para procesar los tokens generados
+                    bool isAccepted = parser.Process(tokens);
+
+                      if (isAccepted)
+                    {
+                        Console.WriteLine("El input fue aceptado por la gramática.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("El input fue rechazado por la gramática.");
+                    }
+
 
 
                 }
