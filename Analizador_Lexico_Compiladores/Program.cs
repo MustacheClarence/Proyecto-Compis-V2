@@ -1,6 +1,7 @@
 ﻿using Analizador_Lexico_Compiladores;
 using System;
 using System.IO;
+using static Analizador_Lexico_Compiladores.ParserLR1;
 
 namespace Analizador_Lexico_Compiladores
 {
@@ -8,8 +9,13 @@ namespace Analizador_Lexico_Compiladores
     {
         static void Main(string[] args)
         {
+            string gramaticatxt = "C:\\Users\\PC\\Documents\\Universidad\\2024\\Compiladores\\Proyecto\\Proyecto-Compis-V2\\.txt's\\GRAMATICA-YOSHI-CORREGIDO - v3 (20241016).txt";
+            string prueba1txt = "C:\\Users\\PC\\Documents\\Universidad\\2024\\Compiladores\\Proyecto\\Proyecto-Compis-V2\\.txt's\\prueba1.txt";
+
+
             Console.WriteLine("Por favor, introduce la ruta completa del archivo que deseas analizar:");
-            string filePath = Console.ReadLine();
+            //string filePath = Console.ReadLine();
+            string filePath = gramaticatxt;
 
             if (!File.Exists(filePath))
             {
@@ -42,12 +48,16 @@ namespace Analizador_Lexico_Compiladores
                     //call escaner (verficar no terminal en der, tenga prod en izq)
                     scanner.StartScan();
 
+
+                    //............................................................CODIGO DE PARSER............................................................
+
                     List<string> grammarProductions = lines.ToList();
                     ParserLR1 parser = new ParserLR1(grammarProductions);
                     Console.WriteLine("Parser LR1 generado correctamente.");
 
                     Console.WriteLine("Por favor, introduce la ruta completa del archivo que contiene el input a analizar:");
-                    string inputFilePath = Console.ReadLine();
+                    //string inputFilePath = Console.ReadLine();
+                    string inputFilePath = prueba1txt;
 
                      if (!File.Exists(inputFilePath))
                     {
@@ -60,15 +70,26 @@ namespace Analizador_Lexico_Compiladores
                     Console.WriteLine("Archivo de input leído correctamente.");
 
                     // Generar los tokens a partir del input utilizando el lexer
-                    Lexer lexer = new Lexer(input);
-                    List<Token> tokens = lexer.GetTokens();
+                    Lexer lexer2 = new Lexer(input);
+                    List<Token> tokens = lexer2.GetTokens();
                      Console.WriteLine("Tokens generados:");
                     foreach (var token in tokens)
                     {
                         Console.WriteLine($"{token.Type}: {token.Value}");
                     }
                     // Llamar al parser LR1 para procesar los tokens generados
-                    bool isAccepted = parser.Process(tokens);
+                    SymbolTable symbolTable = new SymbolTable(); // Crear la tabla de símbolos
+
+                    //convertir token list a string list
+                    List<string> tokenList = new List<string>();
+                    foreach (var token in tokens)
+                    {
+                        string tokenTypeString = token.Type.ToString(); // Convertir TokenType a string
+                        tokenList.Add(tokenTypeString);
+
+                    }
+
+                    bool isAccepted = parser.Parse(tokenList, symbolTable);
 
                       if (isAccepted)
                     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Analizador_Lexico_Compiladores
 {
@@ -18,37 +19,37 @@ namespace Analizador_Lexico_Compiladores
             _position = 0;
 
             // Definir los keywords de la gramática
-            _keywords = new Dictionary<string, TokenType>
+            _keywords = new Dictionary<string, TokenType> 
             {
-                {"PROGRAM", TokenType.Keyword},
-                {"INCLUDE", TokenType.Keyword},
-                {"CONST", TokenType.Keyword},
-                {"TYPE", TokenType.Keyword},
-                {"VAR", TokenType.Keyword},
-                {"RECORD", TokenType.Keyword},
-                {"ARRAY", TokenType.Keyword},
-                {"OF", TokenType.Keyword},
-                {"PROCEDURE", TokenType.Keyword},
-                {"FUNCTION", TokenType.Keyword},
-                {"IF", TokenType.Keyword},
-                {"THEN", TokenType.Keyword},
-                {"ELSE", TokenType.Keyword},
-                {"FOR", TokenType.Keyword},
-                {"TO", TokenType.Keyword},
-                {"WHILE", TokenType.Keyword},
-                {"DO", TokenType.Keyword},
-                {"EXIT", TokenType.Keyword},
-                {"END", TokenType.Keyword},
-                {"PRINTLN", TokenType.Keyword},
-                {"READLN", TokenType.Keyword},
-                {"CASE", TokenType.Keyword},
-                {"BREAK", TokenType.Keyword},
-                {"DOWNTO", TokenType.Keyword},
-                {"INTEGER", TokenType.Keyword},
-                {"REAL", TokenType.Keyword},
-                {"BOOLEAN", TokenType.Keyword},
-                {"STRING", TokenType.Keyword},
-                {"BEGIN", TokenType.Keyword}
+                {"PROGRAM", TokenType.PROGRAM},
+                {"INCLUDE", TokenType.INCLUDE},
+                {"CONST", TokenType.CONST},
+                {"TYPE", TokenType.TYPE},
+                {"VAR", TokenType.VAR},
+                {"RECORD", TokenType.RECORD},
+                {"ARRAY", TokenType.ARRAY},
+                {"OF", TokenType.OF},
+                {"PROCEDURE", TokenType.PROCEDURE},
+                {"FUNCTION", TokenType.FUNCTION},
+                {"IF", TokenType.IF},
+                {"THEN", TokenType.THEN},
+                {"ELSE", TokenType.ELSE},
+                {"FOR", TokenType.FOR},
+                {"TO", TokenType.TO},
+                {"WHILE", TokenType.WHILE},
+                {"DO", TokenType.DO},
+                {"EXIT", TokenType.EXIT},
+                {"END", TokenType.END},
+                {"PRINTLN", TokenType.PRINTLN},
+                {"READLN", TokenType.READLN},
+                {"CASE", TokenType.CASE},
+                {"BREAK", TokenType.BREAK},
+                {"DOWNTO", TokenType.DOWNTO},
+                {"INTEGER", TokenType.INTEGER},
+                {"REAL", TokenType.REAL},
+                {"BOOLEAN", TokenType.BOOLEAN},
+                {"STRING", TokenType.STRING},
+                {"BEGIN", TokenType.BEGIN}
             };
 
             Tokenize();
@@ -77,6 +78,7 @@ namespace Analizador_Lexico_Compiladores
                     {
                         number += current;
                         _position++;
+                        current =_input[_position];
                     }                    
                     _tokens.Add(new Token(TokenType.Number, number));
                 }
@@ -89,6 +91,7 @@ namespace Analizador_Lexico_Compiladores
                     {
                         identifier += current;
                         _position++;
+                        current = _input[_position];
                     }                    
                     // Verificar si es una keyword
                     if (_keywords.ContainsKey(identifier))
@@ -171,6 +174,8 @@ namespace Analizador_Lexico_Compiladores
                     while (_position < _input.Length && Convert.ToString(current) != "'")
                     {
                         str += current;
+                        current = _input[_position];
+                        _position++;
                     }
                     // Verificar si se llegó al final del string sin cerrar
                     if (_position == _input.Length - 1 && Convert.ToString(_input[_position++]) != "'")
@@ -259,7 +264,9 @@ namespace Analizador_Lexico_Compiladores
     public enum TokenType
     {
         Number, String, Identifier, Keyword, Delimiter, LeftParen, RightParen, LeftBrace, RightBrace, EOF, Punctuation,
-        Nullable, relational_operator, additive_operator, multiplicative_operator, boolean_constant
+        Nullable, relational_operator, additive_operator, multiplicative_operator, boolean_constant, PROGRAM, END, BEGIN, 
+        INCLUDE, CONST, TYPE, VAR, RECORD, ARRAY, OF, PROCEDURE, FUNCTION, IF, THEN, ELSE, FOR, TO, WHILE, DO, EXIT, PRINTLN, 
+        READLN, CASE, BREAK, DOWNTO, INTEGER, REAL, BOOLEAN, STRING
     }
 
     // Clase para representar un token

@@ -201,14 +201,8 @@ namespace Analizador_Lexico_Compiladores
                             string nextSymbol = parts[dotIndex + 1];
                             int nextState = GetNextState(state, nextSymbol);
 
-                            if (IsTerminal(nextSymbol))
-                            {
-                                parsingTable[(i, nextSymbol)] = $"Shift {nextState}";
-                            }
-                            else
-                            {
-                                parsingTable[(i, nextSymbol)] = $"GoTo {nextState}";
-                            }
+                            // Usar el valor del símbolo como clave
+                            parsingTable[(i, nextSymbol)] = $"Shift {nextState}";
                         }
                         // Caso 2: Reduce
                         else if (dotIndex == parts.Length - 1)
