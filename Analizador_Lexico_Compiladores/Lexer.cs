@@ -11,7 +11,7 @@ namespace Analizador_Lexico_Compiladores
         private int _position;
         private List<Token> _tokens;
         private Dictionary<string, TokenType> _keywords;
-
+    //porfavor ayudenme
         public Lexer(string input)
         {
             _input = input;
